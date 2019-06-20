@@ -12,6 +12,7 @@ function start(canvas: HTMLCanvasElement) {
     const inkCount = map.get(y) || 0;
     map.set(y, inkCount + 1);
     inkMap.set(x, map);
+    console.log(x, y);
   }
 
   const context = canvas.getContext("2d");
@@ -21,8 +22,6 @@ function start(canvas: HTMLCanvasElement) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     for (let [xCoord, x] of inkMap.entries()) {
       for (let [yCoord, count] of x.entries()) {
-        //console.log("hi");
-        //console.log(xCoord, yCoord);
         for (let i = count; i > 0; i--) {
           context.fillRect(xCoord, yCoord, 5, 5);
         }
@@ -51,7 +50,7 @@ export class WhatADrag {
   }
 
   drag = (e: MouseEvent) => {
-    if (this.inker) {
+    if (this.inker && e.buttons > 0) {
       this.inker.ink(e.pageX, e.pageY);
     }
   };
@@ -63,6 +62,12 @@ export class WhatADrag {
   };
 
   render() {
-    return <canvas ref={this.ready} />;
+    return (
+      <canvas
+        height={window.innerHeight}
+        width={window.innerWidth}
+        ref={this.ready}
+      />
+    );
   }
 }

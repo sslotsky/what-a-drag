@@ -25,8 +25,8 @@ export class AppHome {
         <ion-button href="/profile/ionic" expand="block">
           Profile page
         </ion-button>
-      </ion-content>,
-      <what-a-drag />
+        <what-a-drag />
+      </ion-content>
     ];
   }
 }
