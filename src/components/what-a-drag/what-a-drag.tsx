@@ -2,6 +2,7 @@ import { Component, h } from "@stencil/core";
 
 interface Inker {
   ink: (x: number, y: number) => void;
+  stop: () => void;
 }
 
 function start(canvas: HTMLCanvasElement) {
@@ -18,6 +19,8 @@ function start(canvas: HTMLCanvasElement) {
   const context = canvas.getContext("2d");
   context.fillStyle = "black";
 
+  let requestId;
+
   function draw() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     for (let [xCoord, x] of inkMap.entries()) {
@@ -28,12 +31,12 @@ function start(canvas: HTMLCanvasElement) {
       }
     }
 
-    requestAnimationFrame(draw);
+    requestId = requestAnimationFrame(draw);
   }
 
   draw();
 
-  return { ink };
+  return { ink, stop: () => cancelAnimationFrame(requestId) };
 }
 
 @Component({
@@ -47,7 +50,19 @@ export class WhatADrag {
 
   componentWillLoad() {
     document.addEventListener("mousemove", this.drag);
+    document.addEventListener("touchmove", this.touch);
   }
+
+  componentDidUnload() {
+    document.removeEventListener("mousemove", this.drag);
+    document.removeEventListener("touchmove", this.touch);
+    this.inker.stop();
+  }
+
+  touch = (e: TouchEvent) => {
+    console.log(e);
+    this.inker.ink(e.touches[0].pageX, e.touches[0].pageY);
+  };
 
   drag = (e: MouseEvent) => {
     if (this.inker && e.buttons > 0) {
