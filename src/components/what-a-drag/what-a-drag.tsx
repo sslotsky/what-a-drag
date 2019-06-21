@@ -42,14 +42,14 @@ function gravity(x: number, y: number): Dot {
     origin: { x, y }
   };
 
-  function distance(point: Position) {
+  function triangle(point: Position) {
     const deltaX = attributes.lastMouse.x - point.x;
     const deltaY = attributes.lastMouse.y - point.y;
     const distance = Math.sqrt(
       Math.pow(Math.abs(deltaX), 2) + Math.pow(Math.abs(deltaY), 2)
     );
 
-    return { deltaX, deltaY, distance };
+    return { a: deltaX, b: deltaY, c: distance };
   }
 
   const tick = () => {
@@ -58,15 +58,15 @@ function gravity(x: number, y: number): Dot {
       return;
     }
 
-    const { deltaX, deltaY, distance: d } = distance(attributes.position);
+    const { a: deltaX, b: deltaY, c: distance } = triangle(attributes.position);
 
-    attributes.speed += speedConstant / d;
+    attributes.speed += speedConstant / distance;
 
-    if (attributes.speed >= d) {
+    if (attributes.speed >= distance) {
       foundTheMouse = true;
     }
 
-    const factor = attributes.speed / d;
+    const factor = attributes.speed / distance;
     attributes.position.x += deltaX * factor;
     attributes.position.y += deltaY * factor;
   };
@@ -80,8 +80,8 @@ function gravity(x: number, y: number): Dot {
   const style = () => {
     const saturation = (attributes.position.y * 100) / window.innerHeight;
     const light = (attributes.position.x * 100) / window.innerWidth;
-    const originDistance = distance(attributes.origin).distance;
-    const currentDistance = distance(attributes.position).distance;
+    const originDistance = triangle(attributes.origin).c;
+    const currentDistance = triangle(attributes.position).c;
     const alpha = currentDistance / originDistance;
     return `hsla(170, ${saturation}%, ${light}%, ${alpha})`;
   };
