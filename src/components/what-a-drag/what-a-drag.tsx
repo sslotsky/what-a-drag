@@ -3,7 +3,26 @@ import { Component, h } from "@stencil/core";
 interface Dot {
   x: number;
   y: number;
-  opacity: number;
+  notify: (x: number, y: number) => void;
+  tick: () => void;
+  done: () => boolean;
+  style: () => string;
+}
+
+function fader(x: number, y: number) {
+  const attributes = { x, y, opacity: 100 };
+
+  const tick = () => {
+    attributes.opacity--;
+  };
+
+  const notify = () => {};
+
+  const done = () => attributes.opacity === 0;
+
+  const style = () => `rgba(0, 0, 0, ${attributes.opacity / 100})`;
+
+  return { ...attributes, tick, notify, done, style };
 }
 
 interface Inker {
@@ -11,11 +30,24 @@ interface Inker {
   stop: () => void;
 }
 
-function start(canvas: HTMLCanvasElement) {
+enum DotType {
+  Fader
+}
+
+const dotMaker = {
+  [DotType.Fader]: fader
+};
+
+function start(canvas: HTMLCanvasElement, type = DotType.Fader) {
   const dots: Dot[] = [];
 
   function ink(x: number, y: number) {
-    dots.push({ x, y, opacity: 100 });
+    for (let dot of dots) {
+      dot.notify(x, y);
+    }
+
+    const factory = dotMaker[type] || fader;
+    dots.push(factory(x, y));
   }
 
   const context = canvas.getContext("2d");
@@ -26,14 +58,16 @@ function start(canvas: HTMLCanvasElement) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = dots.length; i > 0; i--) {
       const dot = dots[i - 1];
-      if (dot.opacity === 0) {
+
+      if (dot.done()) {
         dots.splice(i - 1, 1);
         continue;
       }
 
-      dot.opacity = dot.opacity - 1;
-      context.fillStyle = `rgba(0, 0, 0, ${dot.opacity / 100})`;
+      context.fillStyle = dot.style();
       context.fillRect(dot.x, dot.y, 5, 5);
+
+      dot.tick();
     }
 
     requestId = requestAnimationFrame(draw);
