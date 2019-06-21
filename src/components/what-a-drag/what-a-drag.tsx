@@ -1,34 +1,39 @@
 import { Component, h } from "@stencil/core";
 
+interface Dot {
+  x: number;
+  y: number;
+  opacity: number;
+}
+
 interface Inker {
   ink: (x: number, y: number) => void;
   stop: () => void;
 }
 
 function start(canvas: HTMLCanvasElement) {
-  const inkMap = new Map<number, Map<number, number>>();
+  const dots: Dot[] = [];
 
   function ink(x: number, y: number) {
-    const map = inkMap.get(x) || new Map();
-    const inkCount = map.get(y) || 0;
-    map.set(y, inkCount + 1);
-    inkMap.set(x, map);
-    console.log(x, y);
+    dots.push({ x, y, opacity: 100 });
   }
 
   const context = canvas.getContext("2d");
-  context.fillStyle = "black";
 
   let requestId;
 
   function draw() {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    for (let [xCoord, x] of inkMap.entries()) {
-      for (let [yCoord, count] of x.entries()) {
-        for (let i = count; i > 0; i--) {
-          context.fillRect(xCoord, yCoord, 5, 5);
-        }
+    for (let i = dots.length; i > 0; i--) {
+      const dot = dots[i - 1];
+      if (dot.opacity === 0) {
+        dots.splice(i - 1, 1);
+        continue;
       }
+
+      dot.opacity = dot.opacity - 1;
+      context.fillStyle = `rgba(0, 0, 0, ${dot.opacity / 100})`;
+      context.fillRect(dot.x, dot.y, 5, 5);
     }
 
     requestId = requestAnimationFrame(draw);
