@@ -32,9 +32,9 @@ function fader(x: number, y: number): Dot {
 }
 
 function gravity(x: number, y: number): Dot {
-  const speedConstant = 9.8;
-  const closeEnough = 5;
-  const attributes = { x, y, wait: 60, speed: 0, lastMouse: { x, y } };
+  const speedConstant = Math.pow(9.8, 2);
+  let foundTheMouse = false;
+  const attributes = { x, y, wait: 90, speed: 0, lastMouse: { x, y } };
 
   const tick = () => {
     if (attributes.wait > 0) {
@@ -42,14 +42,16 @@ function gravity(x: number, y: number): Dot {
       return;
     }
 
-    attributes.speed += speedConstant / 60;
     const deltaX = attributes.lastMouse.x - attributes.x;
     const deltaY = attributes.lastMouse.y - attributes.y;
-    const distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    const distance = Math.sqrt(
+      Math.pow(Math.abs(deltaX), 2) + Math.pow(Math.abs(deltaY), 2)
+    );
+
+    attributes.speed += speedConstant / distance;
 
     if (attributes.speed >= distance) {
-      attributes.x = attributes.lastMouse.x;
-      attributes.y = attributes.lastMouse.x;
+      foundTheMouse = true;
     }
 
     const factor = attributes.speed / distance;
@@ -61,13 +63,7 @@ function gravity(x: number, y: number): Dot {
     attributes.lastMouse = { x: nextX, y: nextY };
   };
 
-  const done = () => {
-    return (
-      attributes.wait <= 0 &&
-      (Math.abs(attributes.x - attributes.lastMouse.x) <= closeEnough &&
-        Math.abs(attributes.y - attributes.lastMouse.y) <= closeEnough)
-    );
-  };
+  const done = () => foundTheMouse;
 
   const style = () => `black`;
 
