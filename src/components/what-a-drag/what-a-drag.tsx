@@ -34,7 +34,23 @@ function fader(x: number, y: number): Dot {
 function gravity(x: number, y: number): Dot {
   const speedConstant = Math.pow(9.8, 2);
   let foundTheMouse = false;
-  const attributes = { x, y, wait: 90, speed: 0, lastMouse: { x, y } };
+  const attributes = {
+    position: { x, y },
+    wait: 90,
+    speed: 0,
+    lastMouse: { x, y },
+    origin: { x, y }
+  };
+
+  function distance(point: Position) {
+    const deltaX = attributes.lastMouse.x - point.x;
+    const deltaY = attributes.lastMouse.y - point.y;
+    const distance = Math.sqrt(
+      Math.pow(Math.abs(deltaX), 2) + Math.pow(Math.abs(deltaY), 2)
+    );
+
+    return { deltaX, deltaY, distance };
+  }
 
   const tick = () => {
     if (attributes.wait > 0) {
@@ -42,21 +58,17 @@ function gravity(x: number, y: number): Dot {
       return;
     }
 
-    const deltaX = attributes.lastMouse.x - attributes.x;
-    const deltaY = attributes.lastMouse.y - attributes.y;
-    const distance = Math.sqrt(
-      Math.pow(Math.abs(deltaX), 2) + Math.pow(Math.abs(deltaY), 2)
-    );
+    const { deltaX, deltaY, distance: d } = distance(attributes.position);
 
-    attributes.speed += speedConstant / distance;
+    attributes.speed += speedConstant / d;
 
-    if (attributes.speed >= distance) {
+    if (attributes.speed >= d) {
       foundTheMouse = true;
     }
 
-    const factor = attributes.speed / distance;
-    attributes.x += deltaX * factor;
-    attributes.y += deltaY * factor;
+    const factor = attributes.speed / d;
+    attributes.position.x += deltaX * factor;
+    attributes.position.y += deltaY * factor;
   };
 
   const notify = (nextX: number, nextY: number) => {
@@ -65,9 +77,16 @@ function gravity(x: number, y: number): Dot {
 
   const done = () => foundTheMouse;
 
-  const style = () => `black`;
+  const style = () => {
+    const saturation = (attributes.position.y * 100) / window.innerHeight;
+    const light = (attributes.position.x * 100) / window.innerWidth;
+    const originDistance = distance(attributes.origin).distance;
+    const currentDistance = distance(attributes.position).distance;
+    const alpha = currentDistance / originDistance;
+    return `hsla(170, ${saturation}%, ${light}%, ${alpha})`;
+  };
 
-  const position = () => ({ x: attributes.x, y: attributes.y });
+  const position = () => attributes.position;
 
   return { position, tick, notify, done, style };
 }
