@@ -31,6 +31,48 @@ function fader(x: number, y: number): Dot {
   return { position, tick, notify, done, style };
 }
 
+function flipit(x: number, y: number): Dot {
+  /* This was supposed to be a gravity effect, where the pointer
+   * sucks in all the dots. It didn't work, but what I wound up
+   * with was cool, so here it is.
+   */
+
+  const speedConstant = 9.8;
+  const closeEnough = 5;
+  const attributes = { x, y, wait: 60, speed: 0, lastMouse: { x, y } };
+
+  const tick = () => {
+    if (attributes.wait > 0) {
+      attributes.wait--;
+      return;
+    }
+
+    attributes.speed += speedConstant;
+    const deltaX = attributes.lastMouse.x - attributes.x;
+    const deltaY = attributes.lastMouse.y - attributes.y;
+    attributes.x += deltaX / attributes.speed;
+    attributes.y += deltaY / attributes.speed;
+  };
+
+  const notify = (nextX: number, nextY: number) => {
+    attributes.lastMouse = { x: nextX, y: nextY };
+  };
+
+  const done = () => {
+    return (
+      attributes.wait <= 0 &&
+      (Math.abs(attributes.x - attributes.lastMouse.x) <= closeEnough &&
+        Math.abs(attributes.y - attributes.lastMouse.y) <= closeEnough)
+    );
+  };
+
+  const style = () => `black`;
+
+  const position = () => ({ x: attributes.x, y: attributes.y });
+
+  return { position, tick, notify, done, style };
+}
+
 function cruiser(x: number, y: number): Dot {
   const attributes = { x, y, life: 100, delta: null };
 
@@ -65,15 +107,17 @@ interface Inker {
 
 enum DotType {
   Fader,
-  Cruiser
+  Cruiser,
+  Flipit
 }
 
 const dotMaker = {
   [DotType.Fader]: fader,
-  [DotType.Cruiser]: cruiser
+  [DotType.Cruiser]: cruiser,
+  [DotType.Flipit]: flipit
 };
 
-function start(canvas: HTMLCanvasElement, type = DotType.Cruiser) {
+function start(canvas: HTMLCanvasElement, type = DotType.Flipit) {
   const dots: Dot[] = [];
 
   function ink(x: number, y: number) {
