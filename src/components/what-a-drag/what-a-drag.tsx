@@ -191,14 +191,12 @@ export class WhatADrag {
 
   componentWillLoad() {
     document.addEventListener("mousemove", this.drag);
-    document.addEventListener("click", this.click);
     document.addEventListener("touchmove", this.touch);
     window.addEventListener("resize", this.resize);
   }
 
   componentDidUnload() {
     document.removeEventListener("mousemove", this.drag);
-    document.removeEventListener("click", this.click);
     document.removeEventListener("touchmove", this.touch);
     window.removeEventListener("resize", this.resize);
     this.inker.stop();
@@ -222,12 +220,6 @@ export class WhatADrag {
       if (e.buttons > 0) {
         this.inker.ink(e.pageX, e.pageY);
       }
-    }
-  };
-
-  click = (e: MouseEvent) => {
-    if (this.inker) {
-      this.inker.ink(e.pageX, e.pageY);
     }
   };
 
