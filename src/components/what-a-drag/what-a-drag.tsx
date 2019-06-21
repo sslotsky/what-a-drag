@@ -56,14 +56,12 @@ export class WhatADrag {
   componentWillLoad() {
     document.addEventListener("mousemove", this.drag);
     document.addEventListener("click", this.click);
-    document.addEventListener("touchstart", this.touch);
     document.addEventListener("touchmove", this.touch);
   }
 
   componentDidUnload() {
     document.removeEventListener("mousemove", this.drag);
     document.removeEventListener("click", this.click);
-    document.removeEventListener("touchstart", this.touch);
     document.removeEventListener("touchmove", this.touch);
     this.inker.stop();
   }
