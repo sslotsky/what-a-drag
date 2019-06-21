@@ -50,22 +50,33 @@ export class WhatADrag {
 
   componentWillLoad() {
     document.addEventListener("mousemove", this.drag);
+    document.addEventListener("click", this.click);
+    document.addEventListener("touchstart", this.touch);
     document.addEventListener("touchmove", this.touch);
   }
 
   componentDidUnload() {
     document.removeEventListener("mousemove", this.drag);
+    document.removeEventListener("click", this.click);
+    document.removeEventListener("touchstart", this.touch);
     document.removeEventListener("touchmove", this.touch);
     this.inker.stop();
   }
 
   touch = (e: TouchEvent) => {
-    console.log(e);
-    this.inker.ink(e.touches[0].pageX, e.touches[0].pageY);
+    if (this.inker) {
+      this.inker.ink(e.touches[0].pageX, e.touches[0].pageY);
+    }
   };
 
   drag = (e: MouseEvent) => {
     if (this.inker && e.buttons > 0) {
+      this.inker.ink(e.pageX, e.pageY);
+    }
+  };
+
+  click = (e: MouseEvent) => {
+    if (this.inker) {
       this.inker.ink(e.pageX, e.pageY);
     }
   };
