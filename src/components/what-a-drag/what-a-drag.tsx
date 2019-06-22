@@ -1,4 +1,4 @@
-import { Component, h, State } from "@stencil/core";
+import { Component, h, State, Prop, Watch } from "@stencil/core";
 
 interface Position {
   x: number;
@@ -83,7 +83,7 @@ function gravity(x: number, y: number): Dot {
     const originDistance = triangle(attributes.origin).c;
     const currentDistance = triangle(attributes.position).c;
     const alpha = currentDistance / originDistance;
-    return `hsla(170, ${saturation}%, ${light}%, ${alpha})`;
+    return `hsla(20, ${saturation}%, ${light}%, ${alpha})`;
   };
 
   const position = () => attributes.position;
@@ -123,19 +123,11 @@ interface Inker {
   stop: () => void;
 }
 
-enum DotType {
-  Fader,
-  Cruiser,
-  Gravity
-}
+export type DotType = "fader" | "cruiser" | "gravity";
 
-const dotMaker = {
-  [DotType.Fader]: fader,
-  [DotType.Cruiser]: cruiser,
-  [DotType.Gravity]: gravity
-};
+const dotMaker = { fader, cruiser, gravity };
 
-function start(canvas: HTMLCanvasElement, type = DotType.Gravity) {
+function start(canvas: HTMLCanvasElement, type: DotType) {
   const dots: Dot[] = [];
 
   function ink(x: number, y: number) {
@@ -151,7 +143,7 @@ function start(canvas: HTMLCanvasElement, type = DotType.Gravity) {
 
   const context = canvas.getContext("2d");
 
-  let requestId;
+  let requestId = 0;
 
   function draw() {
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -186,8 +178,17 @@ function start(canvas: HTMLCanvasElement, type = DotType.Gravity) {
 export class WhatADrag {
   canvas?: HTMLCanvasElement;
   inker?: Inker;
+  @Prop() type: DotType = "gravity";
   @State() height: number = window.innerHeight;
   @State() width: number = window.innerWidth;
+
+  @Watch("type")
+  changeAnimation(newValue: DotType) {
+    if (this.inker) {
+      this.inker.stop();
+      this.inker = start(this.canvas, newValue);
+    }
+  }
 
   componentWillLoad() {
     document.addEventListener("mousemove", this.drag);
@@ -225,7 +226,8 @@ export class WhatADrag {
 
   ready = (el: HTMLCanvasElement) => {
     if (!this.inker) {
-      this.inker = start(el);
+      this.canvas = el;
+      this.inker = start(el, this.type);
     }
   };
 
