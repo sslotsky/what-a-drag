@@ -1,4 +1,4 @@
-import { Component, h, State, Prop, Watch } from "@stencil/core";
+import { Component, h, State, Watch } from "@stencil/core";
 
 import { Dot, fader, cruiser, gravity } from "./effects";
 
@@ -63,11 +63,11 @@ function start(canvas: HTMLCanvasElement, type: DotType) {
 export class WhatADrag {
   canvas?: HTMLCanvasElement;
   inker?: Inker;
-  @Prop() type: DotType = "gravity";
   @State() height: number = window.innerHeight;
   @State() width: number = window.innerWidth;
+  @State() dotType: DotType = "fader";
 
-  @Watch("type")
+  @Watch("dotType")
   changeAnimation(newValue: DotType) {
     if (this.inker) {
       this.inker.stop();
@@ -112,11 +112,48 @@ export class WhatADrag {
   ready = (el: HTMLCanvasElement) => {
     if (!this.inker) {
       this.canvas = el;
-      this.inker = start(el, this.type);
+      this.inker = start(el, this.dotType);
     }
   };
 
   render() {
-    return <canvas height={this.height} width={this.width} ref={this.ready} />;
+    return (
+      <div class="wrapper">
+        <canvas height={this.height} width={this.width} ref={this.ready} />
+        <div class="controls">
+          <h2>Choose your effect</h2>
+          <label>
+            <input
+              type="radio"
+              name="dot-type"
+              value="cruiser"
+              checked={this.dotType === "fader"}
+              onClick={() => (this.dotType = "fader")}
+            />{" "}
+            Fader
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dot-type"
+              value="cruiser"
+              checked={this.dotType === "cruiser"}
+              onClick={() => (this.dotType = "cruiser")}
+            />{" "}
+            Cruiser
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="dot-type"
+              value="gravity"
+              checked={this.dotType === "gravity"}
+              onClick={() => (this.dotType = "gravity")}
+            />{" "}
+            Gravity
+          </label>
+        </div>
+      </div>
+    );
   }
 }

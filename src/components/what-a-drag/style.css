@@ -3,5 +3,30 @@ canvas {
   top: 0;
   left: 0;
   pointer-events: none;
-  z-index: 1000000;
+}
+
+.wrapper {
+  background-color: hsla(0, 0%, 0%, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: var(--max-z-index, 10000);
+  padding: 1rem;
+  display: grid;
+  width: 100%;
+  grid-template-areas: "panel main";
+  grid-template-columns: 20% 1fr;
+}
+
+.controls {
+  color: orange;
+  background-color: hsla(0, 25%, 0%, 0.7);
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+label {
+  display: block;
 }

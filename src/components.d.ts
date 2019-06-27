@@ -6,9 +6,6 @@
 
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
-import {
-  DotType,
-} from './components/what-a-drag/what-a-drag';
 
 
 export namespace Components {
@@ -17,9 +14,7 @@ export namespace Components {
     'name': string;
   }
   interface AppRoot {}
-  interface WhatADrag {
-    'type': DotType;
-  }
+  interface WhatADrag {}
 }
 
 declare global {
@@ -62,9 +57,7 @@ declare namespace LocalJSX {
     'name'?: string;
   }
   interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
-  interface WhatADrag extends JSXBase.HTMLAttributes<HTMLWhatADragElement> {
-    'type'?: DotType;
-  }
+  interface WhatADrag extends JSXBase.HTMLAttributes<HTMLWhatADragElement> {}
 
   interface IntrinsicElements {
     'app-home': AppHome;

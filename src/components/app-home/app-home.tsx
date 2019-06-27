@@ -1,14 +1,10 @@
-import { Component, h, State } from "@stencil/core";
-
-import { DotType } from "../what-a-drag/what-a-drag";
+import { Component, h } from "@stencil/core";
 
 @Component({
   tag: "app-home",
   styleUrl: "app-home.css"
 })
 export class AppHome {
-  @State() dotType: DotType = "fader";
-
   render() {
     return [
       <ion-header>
@@ -29,40 +25,7 @@ export class AppHome {
         <ion-button href="/profile/ionic" expand="block">
           Profile page
         </ion-button>
-        <div>
-          <h2>Choose your effect</h2>
-          <label>
-            <input
-              type="radio"
-              name="dot-type"
-              value="cruiser"
-              checked={this.dotType === "fader"}
-              onClick={() => (this.dotType = "fader")}
-            />{" "}
-            Fader
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="dot-type"
-              value="cruiser"
-              checked={this.dotType === "cruiser"}
-              onClick={() => (this.dotType = "cruiser")}
-            />{" "}
-            Cruiser
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="dot-type"
-              value="gravity"
-              checked={this.dotType === "gravity"}
-              onClick={() => (this.dotType = "gravity")}
-            />{" "}
-            Gravity
-          </label>
-        </div>
-        <what-a-drag type={this.dotType} />
+        <what-a-drag />
       </ion-content>
     ];
   }
