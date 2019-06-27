@@ -62,6 +62,7 @@ function start(canvas: HTMLCanvasElement, type: DotType) {
 })
 export class WhatADrag {
   canvas?: HTMLCanvasElement;
+  wrapper?: HTMLDivElement;
   inker?: Inker;
   @State() height: number = window.innerHeight;
   @State() width: number = window.innerWidth;
@@ -76,21 +77,18 @@ export class WhatADrag {
   }
 
   componentWillLoad() {
-    document.addEventListener("mousemove", this.drag);
-    document.addEventListener("touchmove", this.touch);
     window.addEventListener("resize", this.resize);
   }
 
   componentDidUnload() {
-    document.removeEventListener("mousemove", this.drag);
-    document.removeEventListener("touchmove", this.touch);
     window.removeEventListener("resize", this.resize);
     this.inker.stop();
   }
 
   resize = () => {
-    this.height = window.innerHeight;
-    this.width = window.innerWidth;
+    const rect = this.wrapper.getBoundingClientRect();
+    this.height = rect.height;
+    this.width = rect.width;
   };
 
   touch = (e: TouchEvent) => {
@@ -118,7 +116,14 @@ export class WhatADrag {
 
   render() {
     return (
-      <div class="wrapper">
+      <div
+        class="wrapper"
+        ref={(el: HTMLDivElement) => {
+          this.wrapper = el;
+        }}
+        onMouseMove={this.drag}
+        onTouchMove={this.touch}
+      >
         <canvas height={this.height} width={this.width} ref={this.ready} />
         <div class="controls">
           <h2>Choose your effect</h2>
