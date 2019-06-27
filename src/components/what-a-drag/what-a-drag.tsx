@@ -135,9 +135,9 @@ export class WhatADrag {
         class="wrapper"
         ref={(el: HTMLDivElement) => {
           this.wrapper = el;
+          el.addEventListener("touchmove", this.touch, { passive: true });
         }}
         onMouseMove={this.drag}
-        onTouchMove={this.touch}
       >
         <canvas height={this.height} width={this.width} ref={this.ready} />
         <div class="controls">
