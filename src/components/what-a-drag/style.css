@@ -6,7 +6,7 @@ canvas {
 }
 
 .wrapper {
-  background-color: hsla(0, 0%, 0%, 0.7);
+  background-color: hsla(0, 0%, 0%, 0.4);
   position: fixed;
   top: 0;
   left: 0;
@@ -29,4 +29,13 @@ canvas {
 
 label {
   display: block;
+}
+
+.base-color {
+  border: 1px solid black;
+  height: 2rem;
+}
+
+.color-slider {
+  width: 100%;
 }

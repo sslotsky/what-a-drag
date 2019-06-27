@@ -12,7 +12,7 @@ export type DotType = "fader" | "cruiser" | "gravity";
 
 const dotMaker = { fader, cruiser, gravity };
 
-function start(canvas: HTMLCanvasElement, type: DotType) {
+function start(canvas: HTMLCanvasElement, type: DotType, hue: number) {
   const dots: Dot[] = [];
 
   function ink(x: number, y: number) {
@@ -40,7 +40,8 @@ function start(canvas: HTMLCanvasElement, type: DotType) {
         continue;
       }
 
-      context.fillStyle = dot.style();
+      const { saturation, light, alpha } = dot.style();
+      context.fillStyle = `hsla(${hue}, ${saturation}%, ${light}%, ${alpha})`;
       const position = dot.position();
       context.fillRect(position.x, position.y, 5, 5);
 
@@ -67,12 +68,21 @@ export class WhatADrag {
   @State() height: number = window.innerHeight;
   @State() width: number = window.innerWidth;
   @State() dotType: DotType = "fader";
+  @State() hue: number = 20;
 
   @Watch("dotType")
   changeAnimation(newValue: DotType) {
     if (this.inker) {
       this.inker.stop();
-      this.inker = start(this.canvas, newValue);
+      this.inker = start(this.canvas, newValue, this.hue);
+    }
+  }
+
+  @Watch("hue")
+  changeHue(newValue: number) {
+    if (this.inker) {
+      this.inker.stop();
+      this.inker = start(this.canvas, this.dotType, newValue);
     }
   }
 
@@ -110,8 +120,13 @@ export class WhatADrag {
   ready = (el: HTMLCanvasElement) => {
     if (!this.inker) {
       this.canvas = el;
-      this.inker = start(el, this.dotType);
+      this.inker = start(el, this.dotType, this.hue);
     }
+  };
+
+  setHue = (e: Event) => {
+    const { value } = e.target as HTMLInputElement;
+    this.hue = parseInt(value, 10);
   };
 
   render() {
@@ -157,6 +172,19 @@ export class WhatADrag {
             />{" "}
             Gravity
           </label>
+          <h2>Choose a color</h2>
+          <input
+            type="range"
+            class="color-slider"
+            min={0}
+            max={360}
+            value={this.hue}
+            onInput={this.setHue}
+          />
+          <div
+            class="base-color"
+            style={{ "background-color": `hsla(${this.hue}, 100%, 50%, 1)` }}
+          />
         </div>
       </div>
     );

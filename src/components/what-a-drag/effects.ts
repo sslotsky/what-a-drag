@@ -3,12 +3,26 @@ interface Position {
   y: number;
 }
 
+interface ColorProperties {
+  saturation: number;
+  light: number;
+  alpha: number;
+}
+
 export interface Dot {
   position: () => Position;
   notify: (x: number, y: number) => void;
   tick: () => void;
   done: () => boolean;
-  style: () => string;
+  style: () => ColorProperties;
+}
+
+function sla(
+  saturation: number,
+  light: number,
+  alpha: number
+): ColorProperties {
+  return { saturation, light, alpha };
 }
 
 export function fader(x: number, y: number): Dot {
@@ -22,7 +36,7 @@ export function fader(x: number, y: number): Dot {
 
   const done = () => attributes.opacity === 0;
 
-  const style = () => `rgba(0, 0, 0, ${attributes.opacity / 100})`;
+  const style = () => sla(100, 50, attributes.opacity / 100);
 
   const position = () => ({ x: attributes.x, y: attributes.y });
 
@@ -81,7 +95,7 @@ export function gravity(x: number, y: number): Dot {
     const originDistance = triangle(attributes.origin).c;
     const currentDistance = triangle(attributes.position).c;
     const alpha = currentDistance / originDistance;
-    return `hsla(20, ${saturation}%, ${light}%, ${alpha})`;
+    return sla(saturation, light, alpha);
   };
 
   const position = () => attributes.position;
@@ -108,7 +122,7 @@ export function cruiser(x: number, y: number): Dot {
 
   const done = () => attributes.life === 0;
 
-  const style = () => `rgba(0, 0, 0, ${attributes.life / 100})`;
+  const style = () => sla(100, 50, attributes.life / 100);
 
   const position = () => ({ x: attributes.x, y: attributes.y });
 
