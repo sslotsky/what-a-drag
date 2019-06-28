@@ -25,6 +25,7 @@ canvas {
   background-color: hsla(0, 25%, 0%, 0.7);
   padding: 1rem;
   border-radius: 0.25rem;
+  user-select: none;
 }
 
 label {

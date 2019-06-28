@@ -185,6 +185,11 @@ export class WhatADrag {
             class="base-color"
             style={{ "background-color": `hsla(${this.hue}, 100%, 50%, 1)` }}
           />
+          <h2>Draw on me!</h2>
+          <p>
+            Try click-dragging to draw on the screen. If you have a touch
+            screen, try drawing with your finger!
+          </p>
         </div>
       </div>
     );
