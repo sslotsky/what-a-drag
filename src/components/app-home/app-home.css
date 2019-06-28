@@ -1,3 +1,6 @@
-label {
-  display: block;
+.backdrop {
+  background-image: url("https://img.freepik.com/free-photo/abstract-polygonal-space-low-poly-dark-background-3d-rendering_7247-223.jpg?size=626&ext=jpg");
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
 }
