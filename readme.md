@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/81e39ba8-a086-47a6-8627-2ab29097c778/deploy-status)](https://app.netlify.com/sites/what-a-drag/deploys)
+
 # Ionic PWA Toolkit Beta
 
 The PWA Toolkit is a starting point for building Progressive Web Apps using Ionic and Stencil.
