@@ -7,9 +7,11 @@ import { Component, h } from "@stencil/core";
 export class AppHome {
   render() {
     return (
-      <div class="backdrop">
-        <what-a-drag />
-      </div>
+      <ion-content class="ion-padding">
+        <div class="backdrop">
+          <what-a-drag />
+        </div>
+      </ion-content>
     );
   }
 }
