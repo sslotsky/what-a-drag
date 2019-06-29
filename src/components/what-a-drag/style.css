@@ -28,6 +28,18 @@ canvas {
   user-select: none;
 }
 
+.control {
+  padding-bottom: 1rem;
+}
+
+.control:not(:first-child) {
+  padding-top: 1rem;
+}
+
+.control:not(:last-child) {
+  border-bottom: 1px solid hsla(0, 25%, 50%, 1);
+}
+
 label {
   display: block;
 }
@@ -35,6 +47,7 @@ label {
 .base-color {
   border: 1px solid black;
   height: 2rem;
+  margin-top: 0.5rem;
 }
 
 .color-slider {

@@ -141,55 +141,61 @@ export class WhatADrag {
       >
         <canvas height={this.height} width={this.width} ref={this.ready} />
         <div class="controls">
-          <h2>Choose your effect</h2>
-          <label>
+          <div class="control">
+            <h2>Draw on me!</h2>
+            <p>
+              Try click-dragging to draw on the screen. If you have a touch
+              screen, try drawing with your finger!
+            </p>
+          </div>
+          <div class="control">
+            <h2>Choose your effect</h2>
+            <label>
+              <input
+                type="radio"
+                name="dot-type"
+                value="cruiser"
+                checked={this.dotType === "fader"}
+                onClick={() => (this.dotType = "fader")}
+              />{" "}
+              Fader
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="dot-type"
+                value="cruiser"
+                checked={this.dotType === "cruiser"}
+                onClick={() => (this.dotType = "cruiser")}
+              />{" "}
+              Cruiser
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="dot-type"
+                value="gravity"
+                checked={this.dotType === "gravity"}
+                onClick={() => (this.dotType = "gravity")}
+              />{" "}
+              Gravity
+            </label>
+          </div>
+          <div class="control">
+            <h2>Choose a color</h2>
             <input
-              type="radio"
-              name="dot-type"
-              value="cruiser"
-              checked={this.dotType === "fader"}
-              onClick={() => (this.dotType = "fader")}
-            />{" "}
-            Fader
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="dot-type"
-              value="cruiser"
-              checked={this.dotType === "cruiser"}
-              onClick={() => (this.dotType = "cruiser")}
-            />{" "}
-            Cruiser
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="dot-type"
-              value="gravity"
-              checked={this.dotType === "gravity"}
-              onClick={() => (this.dotType = "gravity")}
-            />{" "}
-            Gravity
-          </label>
-          <h2>Choose a color</h2>
-          <input
-            type="range"
-            class="color-slider"
-            min={0}
-            max={360}
-            value={this.hue}
-            onInput={this.setHue}
-          />
-          <div
-            class="base-color"
-            style={{ "background-color": `hsla(${this.hue}, 100%, 50%, 1)` }}
-          />
-          <h2>Draw on me!</h2>
-          <p>
-            Try click-dragging to draw on the screen. If you have a touch
-            screen, try drawing with your finger!
-          </p>
+              type="range"
+              class="color-slider"
+              min={0}
+              max={360}
+              value={this.hue}
+              onInput={this.setHue}
+            />
+            <div
+              class="base-color"
+              style={{ "background-color": `hsla(${this.hue}, 100%, 50%, 1)` }}
+            />
+          </div>
         </div>
       </div>
     );
