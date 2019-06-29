@@ -68,7 +68,7 @@ export class WhatADrag {
   @State() height: number = window.innerHeight;
   @State() width: number = window.innerWidth;
   @State() dotType: DotType = "fader";
-  @State() hue: number = 20;
+  @State() hue: number = 170;
 
   @Watch("dotType")
   changeAnimation(newValue: DotType) {
