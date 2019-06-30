@@ -8,8 +8,6 @@
     "dist/"
   ],
   "scripts": {
-    "surge": "cd www && surge --domain limping-play.surge.sh",
-    "deploy": "npm run build && npm run surge",
     "build": "stencil build",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
