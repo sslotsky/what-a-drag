@@ -16,6 +16,11 @@ export namespace Components {
   interface AppHome {}
   interface AppRoot {}
   interface ControlProvider {}
+  interface DragControls {
+    'dispatch': (action: ActionHandler) => void;
+    'effect': Effect;
+    'hue': number;
+  }
   interface WhatADrag {
     'dispatch': (action: ActionHandler) => void;
     'effect': Effect;
@@ -44,6 +49,12 @@ declare global {
     new (): HTMLControlProviderElement;
   };
 
+  interface HTMLDragControlsElement extends Components.DragControls, HTMLStencilElement {}
+  var HTMLDragControlsElement: {
+    prototype: HTMLDragControlsElement;
+    new (): HTMLDragControlsElement;
+  };
+
   interface HTMLWhatADragElement extends Components.WhatADrag, HTMLStencilElement {}
   var HTMLWhatADragElement: {
     prototype: HTMLWhatADragElement;
@@ -53,6 +64,7 @@ declare global {
     'app-home': HTMLAppHomeElement;
     'app-root': HTMLAppRootElement;
     'control-provider': HTMLControlProviderElement;
+    'drag-controls': HTMLDragControlsElement;
     'what-a-drag': HTMLWhatADragElement;
   }
 }
@@ -61,6 +73,11 @@ declare namespace LocalJSX {
   interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
   interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
   interface ControlProvider extends JSXBase.HTMLAttributes<HTMLControlProviderElement> {}
+  interface DragControls extends JSXBase.HTMLAttributes<HTMLDragControlsElement> {
+    'dispatch'?: (action: ActionHandler) => void;
+    'effect'?: Effect;
+    'hue'?: number;
+  }
   interface WhatADrag extends JSXBase.HTMLAttributes<HTMLWhatADragElement> {
     'dispatch'?: (action: ActionHandler) => void;
     'effect'?: Effect;
@@ -71,6 +88,7 @@ declare namespace LocalJSX {
     'app-home': AppHome;
     'app-root': AppRoot;
     'control-provider': ControlProvider;
+    'drag-controls': DragControls;
     'what-a-drag': WhatADrag;
   }
 }

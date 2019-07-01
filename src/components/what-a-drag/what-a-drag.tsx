@@ -2,7 +2,6 @@ import { Component, h, State, Prop, Watch } from "@stencil/core";
 
 import Tunnel, {
   Effect,
-  Action,
   ActionHandler
 } from "../control-provider/data/control";
 
@@ -131,15 +130,6 @@ export class WhatADrag {
     }
   };
 
-  setHue = (e: Event) => {
-    const { value } = e.target as HTMLInputElement;
-    this.dispatch({ type: Action.UPDATE_HUE, hue: parseInt(value, 10) });
-  };
-
-  setEffect = (effect: Effect) => () => {
-    this.dispatch({ type: Action.UPDATE_EFFECT, effect });
-  };
-
   render() {
     return (
       <div
@@ -151,63 +141,7 @@ export class WhatADrag {
         onMouseMove={this.drag}
       >
         <canvas height={this.height} width={this.width} ref={this.ready} />
-        <div class="controls">
-          <div class="control">
-            <h2>Draw on me!</h2>
-            <p>
-              Try click-dragging to draw on the screen. If you have a touch
-              screen, try drawing with your finger!
-            </p>
-          </div>
-          <div class="control">
-            <h2>Choose your effect</h2>
-            <label>
-              <input
-                type="radio"
-                name="dot-type"
-                value="cruiser"
-                checked={this.effect === "fader"}
-                onClick={this.setEffect("fader")}
-              />{" "}
-              Fader
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="dot-type"
-                value="cruiser"
-                checked={this.effect === "cruiser"}
-                onClick={this.setEffect("cruiser")}
-              />{" "}
-              Cruiser
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="dot-type"
-                value="gravity"
-                checked={this.effect === "gravity"}
-                onClick={this.setEffect("gravity")}
-              />{" "}
-              Gravity
-            </label>
-          </div>
-          <div class="control">
-            <h2>Choose a color</h2>
-            <input
-              type="range"
-              class="color-slider"
-              min={0}
-              max={360}
-              value={this.hue}
-              onInput={this.setHue}
-            />
-            <div
-              class="base-color"
-              style={{ "background-color": `hsla(${this.hue}, 100%, 50%, 1)` }}
-            />
-          </div>
-        </div>
+        <slot />
       </div>
     );
   }

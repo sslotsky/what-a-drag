@@ -1,0 +1,43 @@
+.controls {
+  background-color: hsla(20, 25%, 0%, 0.7);
+  padding: 1rem;
+  border-radius: 0.25rem;
+  user-select: none;
+  height: 100%;
+}
+
+.control {
+  padding-bottom: 1rem;
+}
+
+.control:not(:first-child) {
+  padding-top: 1rem;
+}
+
+.control:not(:last-child) {
+  border-bottom: 1px solid hsla(20, 25%, 50%, 1);
+}
+
+label {
+  display: block;
+}
+
+h2 {
+  color: hsla(20, 50%, 50%, 1);
+}
+
+label,
+p {
+  color: hsla(20, 40%, 65%, 1);
+  line-height: 1.5rem;
+}
+
+.base-color {
+  border: 1px solid black;
+  height: 2rem;
+  margin-top: 0.5rem;
+}
+
+.color-slider {
+  width: 100%;
+}
