@@ -9,7 +9,9 @@ export class AppHome {
     return (
       <ion-content>
         <div class="backdrop">
-          <what-a-drag />
+          <control-provider>
+            <what-a-drag />
+          </control-provider>
         </div>
       </ion-content>
     );

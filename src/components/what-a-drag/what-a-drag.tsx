@@ -1,4 +1,10 @@
-import { Component, h, State, Watch } from "@stencil/core";
+import { Component, h, State, Prop, Watch } from "@stencil/core";
+
+import Tunnel, {
+  Effect,
+  Action,
+  ActionHandler
+} from "../control-provider/data/control";
 
 import { Dot, fader, cruiser, gravity } from "./effects";
 
@@ -67,11 +73,12 @@ export class WhatADrag {
   inker?: Inker;
   @State() height: number = window.innerHeight;
   @State() width: number = window.innerWidth;
-  @State() dotType: DotType = "fader";
-  @State() hue: number = 170;
+  @Prop() dispatch: (action: ActionHandler) => void;
+  @Prop() effect: Effect;
+  @Prop() hue: number;
 
-  @Watch("dotType")
-  changeAnimation(newValue: DotType) {
+  @Watch("effect")
+  changeAnimation(newValue: Effect) {
     if (this.inker) {
       this.inker.stop();
       this.inker = start(this.canvas, newValue, this.hue);
@@ -82,7 +89,7 @@ export class WhatADrag {
   changeHue(newValue: number) {
     if (this.inker) {
       this.inker.stop();
-      this.inker = start(this.canvas, this.dotType, newValue);
+      this.inker = start(this.canvas, this.effect, newValue);
     }
   }
 
@@ -120,13 +127,17 @@ export class WhatADrag {
   ready = (el: HTMLCanvasElement) => {
     if (!this.inker) {
       this.canvas = el;
-      this.inker = start(el, this.dotType, this.hue);
+      this.inker = start(el, this.effect, this.hue);
     }
   };
 
   setHue = (e: Event) => {
     const { value } = e.target as HTMLInputElement;
-    this.hue = parseInt(value, 10);
+    this.dispatch({ type: Action.UPDATE_HUE, hue: parseInt(value, 10) });
+  };
+
+  setEffect = (effect: Effect) => () => {
+    this.dispatch({ type: Action.UPDATE_EFFECT, effect });
   };
 
   render() {
@@ -155,8 +166,8 @@ export class WhatADrag {
                 type="radio"
                 name="dot-type"
                 value="cruiser"
-                checked={this.dotType === "fader"}
-                onClick={() => (this.dotType = "fader")}
+                checked={this.effect === "fader"}
+                onClick={this.setEffect("fader")}
               />{" "}
               Fader
             </label>
@@ -165,8 +176,8 @@ export class WhatADrag {
                 type="radio"
                 name="dot-type"
                 value="cruiser"
-                checked={this.dotType === "cruiser"}
-                onClick={() => (this.dotType = "cruiser")}
+                checked={this.effect === "cruiser"}
+                onClick={this.setEffect("cruiser")}
               />{" "}
               Cruiser
             </label>
@@ -175,8 +186,8 @@ export class WhatADrag {
                 type="radio"
                 name="dot-type"
                 value="gravity"
-                checked={this.dotType === "gravity"}
-                onClick={() => (this.dotType = "gravity")}
+                checked={this.effect === "gravity"}
+                onClick={this.setEffect("gravity")}
               />{" "}
               Gravity
             </label>
@@ -201,3 +212,5 @@ export class WhatADrag {
     );
   }
 }
+
+Tunnel.injectProps(WhatADrag, ["effect", "hue", "dispatch"]);

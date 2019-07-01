@@ -6,12 +6,21 @@
 
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
+import {
+  ActionHandler,
+  Effect,
+} from './components/control-provider/data/control';
 
 
 export namespace Components {
   interface AppHome {}
   interface AppRoot {}
-  interface WhatADrag {}
+  interface ControlProvider {}
+  interface WhatADrag {
+    'dispatch': (action: ActionHandler) => void;
+    'effect': Effect;
+    'hue': number;
+  }
 }
 
 declare global {
@@ -29,6 +38,12 @@ declare global {
     new (): HTMLAppRootElement;
   };
 
+  interface HTMLControlProviderElement extends Components.ControlProvider, HTMLStencilElement {}
+  var HTMLControlProviderElement: {
+    prototype: HTMLControlProviderElement;
+    new (): HTMLControlProviderElement;
+  };
+
   interface HTMLWhatADragElement extends Components.WhatADrag, HTMLStencilElement {}
   var HTMLWhatADragElement: {
     prototype: HTMLWhatADragElement;
@@ -37,6 +52,7 @@ declare global {
   interface HTMLElementTagNameMap {
     'app-home': HTMLAppHomeElement;
     'app-root': HTMLAppRootElement;
+    'control-provider': HTMLControlProviderElement;
     'what-a-drag': HTMLWhatADragElement;
   }
 }
@@ -44,11 +60,17 @@ declare global {
 declare namespace LocalJSX {
   interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
   interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
-  interface WhatADrag extends JSXBase.HTMLAttributes<HTMLWhatADragElement> {}
+  interface ControlProvider extends JSXBase.HTMLAttributes<HTMLControlProviderElement> {}
+  interface WhatADrag extends JSXBase.HTMLAttributes<HTMLWhatADragElement> {
+    'dispatch'?: (action: ActionHandler) => void;
+    'effect'?: Effect;
+    'hue'?: number;
+  }
 
   interface IntrinsicElements {
     'app-home': AppHome;
     'app-root': AppRoot;
+    'control-provider': ControlProvider;
     'what-a-drag': WhatADrag;
   }
 }
