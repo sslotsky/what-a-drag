@@ -1,4 +1,9 @@
-import { Component, h, State, Watch } from "@stencil/core";
+import { Component, h, State, Prop, Watch } from "@stencil/core";
+
+import Tunnel, {
+  Effect,
+  ActionHandler
+} from "../control-provider/data/control";
 
 import { Dot, fader, cruiser, gravity } from "./effects";
 
@@ -67,11 +72,12 @@ export class WhatADrag {
   inker?: Inker;
   @State() height: number = window.innerHeight;
   @State() width: number = window.innerWidth;
-  @State() dotType: DotType = "fader";
-  @State() hue: number = 170;
+  @Prop() dispatch: (action: ActionHandler) => void;
+  @Prop() effect: Effect;
+  @Prop() hue: number;
 
-  @Watch("dotType")
-  changeAnimation(newValue: DotType) {
+  @Watch("effect")
+  changeAnimation(newValue: Effect) {
     if (this.inker) {
       this.inker.stop();
       this.inker = start(this.canvas, newValue, this.hue);
@@ -82,7 +88,7 @@ export class WhatADrag {
   changeHue(newValue: number) {
     if (this.inker) {
       this.inker.stop();
-      this.inker = start(this.canvas, this.dotType, newValue);
+      this.inker = start(this.canvas, this.effect, newValue);
     }
   }
 
@@ -120,13 +126,8 @@ export class WhatADrag {
   ready = (el: HTMLCanvasElement) => {
     if (!this.inker) {
       this.canvas = el;
-      this.inker = start(el, this.dotType, this.hue);
+      this.inker = start(el, this.effect, this.hue);
     }
-  };
-
-  setHue = (e: Event) => {
-    const { value } = e.target as HTMLInputElement;
-    this.hue = parseInt(value, 10);
   };
 
   render() {
@@ -140,64 +141,10 @@ export class WhatADrag {
         onMouseMove={this.drag}
       >
         <canvas height={this.height} width={this.width} ref={this.ready} />
-        <div class="controls">
-          <div class="control">
-            <h2>Draw on me!</h2>
-            <p>
-              Try click-dragging to draw on the screen. If you have a touch
-              screen, try drawing with your finger!
-            </p>
-          </div>
-          <div class="control">
-            <h2>Choose your effect</h2>
-            <label>
-              <input
-                type="radio"
-                name="dot-type"
-                value="cruiser"
-                checked={this.dotType === "fader"}
-                onClick={() => (this.dotType = "fader")}
-              />{" "}
-              Fader
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="dot-type"
-                value="cruiser"
-                checked={this.dotType === "cruiser"}
-                onClick={() => (this.dotType = "cruiser")}
-              />{" "}
-              Cruiser
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="dot-type"
-                value="gravity"
-                checked={this.dotType === "gravity"}
-                onClick={() => (this.dotType = "gravity")}
-              />{" "}
-              Gravity
-            </label>
-          </div>
-          <div class="control">
-            <h2>Choose a color</h2>
-            <input
-              type="range"
-              class="color-slider"
-              min={0}
-              max={360}
-              value={this.hue}
-              onInput={this.setHue}
-            />
-            <div
-              class="base-color"
-              style={{ "background-color": `hsla(${this.hue}, 100%, 50%, 1)` }}
-            />
-          </div>
-        </div>
+        <slot />
       </div>
     );
   }
 }
+
+Tunnel.injectProps(WhatADrag, ["effect", "hue", "dispatch"]);
