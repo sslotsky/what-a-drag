@@ -16,13 +16,13 @@
   }
 
   100% {
-    margin-left: calc(-100% + 3rem);
+    margin-left: calc(-100% + 2rem);
   }
 }
 
 @keyframes slide-out {
   0% {
-    margin-left: calc(-100% + 3rem);
+    margin-left: calc(-100% + 2rem);
   }
 
   100% {
@@ -73,6 +73,7 @@
     color: white;
     font-weight: bold;
     font-size: 3rem;
+    user-select: none;
 
     &:focus,
     &:active {

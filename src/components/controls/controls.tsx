@@ -94,7 +94,7 @@ export class WhatADrag {
         </div>
         <div class="switch">
           <button onClick={() => (this.expanded = !this.expanded)}>
-            &rarr;
+            &raquo;
           </button>
         </div>
       </Host>
