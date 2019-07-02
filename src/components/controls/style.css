@@ -1,3 +1,88 @@
+@keyframes rotate-left {
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes rotate-right {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slide-in {
+  0% {
+    margin-left: 0;
+  }
+
+  100% {
+    margin-left: calc(-100% + 2rem);
+  }
+}
+
+@keyframes slide-out {
+  0% {
+    margin-left: calc(-100% + 2rem);
+  }
+
+  100% {
+    margin-left: 0;
+  }
+}
+
+:host {
+  display: flex;
+  width: 100%;
+
+  &.expanded {
+    animation-name: slide-out;
+    animation-duration: 500ms;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+
+    & .switch {
+      animation-name: rotate-right;
+      animation-duration: 500ms;
+      animation-timing-function: ease;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  &.collapsed {
+    animation-name: slide-in;
+    animation-duration: 500ms;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+
+    & .switch {
+      animation-name: rotate-left;
+      animation-duration: 500ms;
+      animation-timing-function: ease;
+      animation-fill-mode: forwards;
+    }
+  }
+}
+
+.switch {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  & button {
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 3rem;
+    user-select: none;
+
+    &:focus,
+    &:active {
+      outline: none;
+      border: none;
+    }
+  }
+}
+
 .controls {
   background-color: hsla(20, 25%, 0%, 0.7);
   padding: 1rem;
