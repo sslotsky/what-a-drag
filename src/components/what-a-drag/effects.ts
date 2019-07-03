@@ -54,6 +54,19 @@ export function gravity(x: number, y: number): Dot {
     origin: { x, y }
   };
 
+  const driftPoint = {
+    x: Math.random() * 1000,
+    y: Math.random() * 1000
+  };
+
+  const { a: driftDeltaX, b: driftDeltaY, c: driftDistance } = triangle(
+    driftPoint
+  );
+  const [driftX, driftY] = [
+    driftDeltaX / driftDistance,
+    driftDeltaY / driftDistance
+  ];
+
   function triangle(point: Position) {
     const deltaX = attributes.lastMouse.x - point.x;
     const deltaY = attributes.lastMouse.y - point.y;
@@ -66,6 +79,8 @@ export function gravity(x: number, y: number): Dot {
 
   const tick = () => {
     if (attributes.wait > 0) {
+      attributes.position.x += driftX;
+      attributes.position.y += driftY;
       attributes.wait--;
       return;
     }
