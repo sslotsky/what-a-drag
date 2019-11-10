@@ -47,8 +47,12 @@ function start(canvas: HTMLCanvasElement, type: DotType, hue: number) {
 
       const { saturation, light, alpha } = dot.style();
       context.fillStyle = `hsla(${hue}, ${saturation}%, ${light}%, ${alpha})`;
+      context.shadowColor = `hsla(${hue}, ${saturation}%, ${light}%, ${alpha})`;
+      context.shadowOffsetX = 10;
+      context.shadowOffsetY = 10;
+
       const position = dot.position();
-      context.fillRect(position.x, position.y, 5, 5);
+      context.fillText("🎷", position.x, position.y, 15);
 
       dot.tick();
     }
@@ -111,6 +115,14 @@ export class WhatADrag {
     if (this.inker) {
       this.inker.notify(e.touches[0].pageX, e.touches[0].pageY);
       this.inker.ink(e.touches[0].pageX, e.touches[0].pageY);
+
+      if (e.touches.length === 2) {
+        this.inker.notify(e.touches[1].pageX, e.touches[1].pageY);
+        this.inker.ink(e.touches[1].pageX, e.touches[1].pageY);
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
     }
   };
 

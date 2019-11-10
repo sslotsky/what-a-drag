@@ -14,11 +14,11 @@
     "test.watch": "stencil test --spec --e2e --watch"
   },
   "dependencies": {
-    "@ionic/core": "one",
+    "@ionic/core": "^4.11.4",
     "@stencil/state-tunnel": "^1.0.1"
   },
   "devDependencies": {
-    "@stencil/core": "1.0.0-beta.8",
+    "@stencil/core": "^1.7.5",
     "@stencil/postcss": "^1.0.1",
     "postcss-preset-env": "^6.6.0"
   }
